@@ -4,6 +4,9 @@ HELP.md
 .gradle
 build/
 data/
+mysql_data/
+postgres_data/
+
 
 
 ### STS ###
