@@ -21,3 +21,7 @@
 ```
     java "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" -jar ./artifacts/aqa-shop.jar 
 ```
+6. В новом окне терминала запустить выполнение тестирования командой:
+```
+    ./gradlew clean test --info 
+```
