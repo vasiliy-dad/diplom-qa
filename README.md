@@ -5,5 +5,6 @@
 1. Запустить Docker Desktop
 2. Создать новый проект в IntelliJ IDEA с настройками: JDK: Java (corretto-11), Build system: Gradle, Gradle DSL: Groovy
 3. Клонировать репозиторий с GitHub, набрав в окне терминала команду:
-   ``` git clone https://github.com/vasiliy-dad/diplom-qa.git ```
+   ``` git clone https://github.com/vasiliy-dad/diplom-qa.git
+   ```
 5. Для запуска эмулятора банковских сервисов, которые могут принимать запросы в нужном формате и генерировать предопределённые ответы для заданного набора карт, в новом окне терминала ввести команду:
