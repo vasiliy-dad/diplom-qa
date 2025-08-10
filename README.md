@@ -1,3 +1,5 @@
+![Build status](https://github.com/vasiliy-dad/diplom-qa/actions/workflows/gradle.yml/badge.svg?branch=main)
+
 # Дипломный проект по профессии «Тестировщик»
 
 ## Инструкция по запуску окружения и автотестов
