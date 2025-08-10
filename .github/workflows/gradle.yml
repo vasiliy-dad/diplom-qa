@@ -1,0 +1,84 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java CI с Gradle
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0.41
+        ports:
+          - '3300:3306'
+        env:
+          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+          MYSQL_DATABASE: 'app'
+          MYSQL_USER: 'app'
+          MYSQL_PASSWORD: 'pass'
+        options: >-
+          --health-cmd "mysqladmin ping -h localhost -u app -ppass"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --mount type=volume,source=mysql_data,target=/var/lib/mysql
+
+      postgres:
+        image: postgres:14-alpine
+        ports:
+          - '5432:5432'
+        env:
+          POSTGRES_DB: 'app'
+          POSTGRES_USER: 'app'
+          POSTGRES_PASSWORD: 'pass'
+        options: >-
+          --health-cmd "pg_isready -U app -d app"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --mount type=volume,source=postgres_data,target=/var/lib/postgresql/data
+
+      gate-simulator:
+        image: gate-simulator:1.0
+        ports:
+          - '9999:9999'
+        build:
+          context: ./gate-simulator
+        options: >-
+          --health-cmd "nc -z localhost 9999 || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Установка JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Даем права на выполнение gradlew
+        run: chmod +x gradlew
+
+      - name: Ожидание готовности контейнеров
+        run: sleep 120  # Пауза 120 секунд для запуска контейнеров
+
+      - name: Запуск SUT для MySQL
+        run: java "-Dspring.datasource.url=jdbc:mysql://localhost:3300/app" -jar ./artifacts/aqa-shop.jar &
+        continue-on-error: true
+
+      - name: Запуск SUT для PostgreSQL
+        run: java "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" -jar ./artifacts/aqa-shop.jar &
+        continue-on-error: true
+
+      - name: Сборка с Gradle
+        run: ./gradlew test -Dselenide.headless=true --info
