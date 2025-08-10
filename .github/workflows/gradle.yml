@@ -16,23 +16,18 @@ jobs:
     services:
       mysql:
         image: mysql:8.0.41
-        ports:
-          - '3300:3306'
+        ports: ['3300:3306']
         env:
-          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
           MYSQL_DATABASE: 'app'
           MYSQL_USER: 'app'
           MYSQL_PASSWORD: 'pass'
         options: >-
           --health-cmd "mysqladmin ping -h localhost -u app -ppass"
           --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
       postgres:
         image: postgres:14-alpine
-        ports:
-          - '5432:5432'
+        ports: ['5432:5432']
         env:
           POSTGRES_DB: 'app'
           POSTGRES_USER: 'app'
@@ -40,44 +35,37 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U app -d app"
           --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
-      gate-simulator:
-        image: gate-simulator:1.0
-        ports:
-          - '9999:9999'
-        options: >-
-          --health-cmd "nc -z localhost 9999 || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-    steps:
+    steps:      
       - uses: actions/checkout@v2
+            
+      - name: Build and run gate-simulator
+        run: |
+          docker build -t gate-simulator:1.0 ./gate-simulator
+          docker run -d -p 9999:9999 --name gate-simulator gate-simulator:1.0
+          sleep 30
       
-      - name: Сборка gate-simulator
-        run: docker build -t gate-simulator:1.0 ./gate-simulator
-
-      - name: Установка JDK 11
+      - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Даем права на выполнение gradlew
+      
+      - name: Grant gradlew permissions
         run: chmod +x gradlew
-
-      - name: Ожидание готовности контейнеров
-        run: sleep 120
-
-      - name: Запуск SUT для MySQL
+      
+      - name: Wait for services
+        run: |
+          while ! nc -z localhost 3300; do sleep 1; done  # MySQL
+          while ! nc -z localhost 5432; do sleep 1; done  # PostgreSQL
+          while ! nc -z localhost 9999; do sleep 1; done  # Gate-simulator
+          echo "All services are up!"
+      
+      - name: Run MySQL SUT
         run: java "-Dspring.datasource.url=jdbc:mysql://localhost:3300/app" -jar ./artifacts/aqa-shop.jar &
-        continue-on-error: true
-
-      - name: Запуск SUT для PostgreSQL
+        
+      - name: Run PostgreSQL SUT
         run: java "-Dspring.datasource.url=jdbc:postgresql://localhost:5432/app" -jar ./artifacts/aqa-shop.jar &
-        continue-on-error: true
-
-      - name: Сборка с Gradle
+        
+      - name: Run Gradle tests
         run: ./gradlew test -Dselenide.headless=true --info
