@@ -28,7 +28,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --mount type=volume,source=mysql_data,target=/var/lib/mysql
 
       postgres:
         image: postgres:14-alpine
@@ -43,15 +42,11 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-          --mount type=volume,source=postgres_data,target=/var/lib/postgresql/data
 
       gate-simulator:
         image: gate-simulator:1.0
         ports:
           - '9999:9999'
-        build:
-          context: ./gate-simulator
-          dockerfile: Dockerfile
         options: >-
           --health-cmd "nc -z localhost 9999 || exit 1"
           --health-interval 10s
@@ -60,6 +55,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Сборка gate-simulator
+        run: docker build -t gate-simulator:1.0 ./gate-simulator
 
       - name: Установка JDK 11
         uses: actions/setup-java@v2
@@ -71,7 +69,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Ожидание готовности контейнеров
-        run: sleep 120  # Пауза 120 секунд для запуска контейнеров
+        run: sleep 120
 
       - name: Запуск SUT для MySQL
         run: java "-Dspring.datasource.url=jdbc:mysql://localhost:3300/app" -jar ./artifacts/aqa-shop.jar &
