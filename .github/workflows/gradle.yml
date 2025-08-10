@@ -18,6 +18,7 @@ jobs:
         image: mysql:8.0.41
         ports: ['3300:3306']
         env:
+          MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
           MYSQL_DATABASE: 'app'
           MYSQL_USER: 'app'
           MYSQL_PASSWORD: 'pass'
