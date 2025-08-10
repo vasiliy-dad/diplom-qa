@@ -45,17 +45,17 @@ public class DebitCardPaymentTest {
         assertEquals(1, SQLHelper.getPaymentCount());
     }
 
-//    @Test
-//    @DisplayName("2.Покупка тура при вводе данных карты со статусом DECLINED")
-//    public void shouldDeclinedCard() {
-//        mainPage.clickDebitCard();
-//        debitCardPage.debitCardData(DataHelper.getCardDeclined());
-//        debitCardPage.notificationFailed();
-//
-//        assertEquals("DECLINED", SQLHelper.getPaymentStatusDB());
-//        assertEquals(0, SQLHelper.getOrderCount());
-//        assertEquals(0, SQLHelper.getPaymentCount());
-//    }
+    @Test
+    @DisplayName("2.Покупка тура при вводе данных карты со статусом DECLINED")
+    public void shouldDeclinedCard() {
+        mainPage.clickDebitCard();
+        debitCardPage.debitCardData(DataHelper.getCardDeclined());
+        debitCardPage.notificationFailed();
+
+        assertEquals("DECLINED", SQLHelper.getPaymentStatusDB());
+        assertEquals(0, SQLHelper.getOrderCount());
+        assertEquals(0, SQLHelper.getPaymentCount());
+    }
 
     @Test
     @DisplayName("3.Покупка тура при отправке пустых значений в полях формы")
@@ -327,16 +327,16 @@ public class DebitCardPaymentTest {
         assertEquals(0, SQLHelper.getPaymentCount());
     }
 
-//    @Test
-//    @DisplayName("27.Поле владелец заполнено 1 буквой")
-//    public void shouldOneLetterOwnerField() {
-//        mainPage.clickDebitCard();
-//        debitCardPage.debitCardData(DataHelper.getFieldOwnerOneLetter());
-//        debitCardPage.invalidFormatOwnerFieldValueMustContainMoreThanOneLetter();
-//
-//        assertEquals(0, SQLHelper.getOrderCount());
-//        assertEquals(0, SQLHelper.getPaymentCount());
-//    }
+    @Test
+    @DisplayName("27.Поле владелец заполнено 1 буквой")
+    public void shouldOneLetterOwnerField() {
+        mainPage.clickDebitCard();
+        debitCardPage.debitCardData(DataHelper.getFieldOwnerOneLetter());
+        debitCardPage.invalidFormatOwnerFieldValueMustContainMoreThanOneLetter();
+
+        assertEquals(0, SQLHelper.getOrderCount());
+        assertEquals(0, SQLHelper.getPaymentCount());
+    }
 
     @Test
     @DisplayName("28.Поле владелец заполнено значением через пробел, состоящим из двойного имени")
@@ -360,38 +360,38 @@ public class DebitCardPaymentTest {
         assertEquals(1, SQLHelper.getPaymentCount());
     }
 
-//    @Test
-//    @DisplayName("30.Поле владелец заполнено значением на кириллице")
-//    public void shouldInCyrillicOwnerField() {
-//        mainPage.clickDebitCard();
-//        debitCardPage.debitCardData(DataHelper.getFieldOwnerInCyrillic());
-//        debitCardPage.invalidFormatOwnerField();
-//
-//        assertEquals(0, SQLHelper.getOrderCount());
-//        assertEquals(0, SQLHelper.getPaymentCount());
-//    }
+    @Test
+    @DisplayName("30.Поле владелец заполнено значением на кириллице")
+    public void shouldInCyrillicOwnerField() {
+        mainPage.clickDebitCard();
+        debitCardPage.debitCardData(DataHelper.getFieldOwnerInCyrillic());
+        debitCardPage.invalidFormatOwnerField();
 
-//    @Test
-//    @DisplayName("31.Поле владелец заполнено цифрами")
-//    public void shouldNumbersInTheOwnerField() {
-//        mainPage.clickDebitCard();
-//        debitCardPage.debitCardData(DataHelper.getFieldOwnerInNumbers());
-//        debitCardPage.invalidFormatOwnerField();
-//
-//        assertEquals(0, SQLHelper.getOrderCount());
-//        assertEquals(0, SQLHelper.getPaymentCount());
-//    }
+        assertEquals(0, SQLHelper.getOrderCount());
+        assertEquals(0, SQLHelper.getPaymentCount());
+    }
 
-//    @Test
-//    @DisplayName("32.Поле владелец заполнено спецсимволами")
-//    public void shouldSpecialCharacterOwnerField() {
-//        mainPage.clickDebitCard();
-//        debitCardPage.debitCardData(DataHelper.getFieldOwnerSpecialCharacter());
-//        debitCardPage.invalidFormatOwnerField();
-//
-//        assertEquals(0, SQLHelper.getOrderCount());
-//        assertEquals(0, SQLHelper.getPaymentCount());
-//    }
+    @Test
+    @DisplayName("31.Поле владелец заполнено цифрами")
+    public void shouldNumbersInTheOwnerField() {
+        mainPage.clickDebitCard();
+        debitCardPage.debitCardData(DataHelper.getFieldOwnerInNumbers());
+        debitCardPage.invalidFormatOwnerField();
+
+        assertEquals(0, SQLHelper.getOrderCount());
+        assertEquals(0, SQLHelper.getPaymentCount());
+    }
+
+    @Test
+    @DisplayName("32.Поле владелец заполнено спецсимволами")
+    public void shouldSpecialCharacterOwnerField() {
+        mainPage.clickDebitCard();
+        debitCardPage.debitCardData(DataHelper.getFieldOwnerSpecialCharacter());
+        debitCardPage.invalidFormatOwnerField();
+
+        assertEquals(0, SQLHelper.getOrderCount());
+        assertEquals(0, SQLHelper.getPaymentCount());
+    }
 
     //Поле "CVC/CVV"
     @Test
@@ -449,14 +449,14 @@ public class DebitCardPaymentTest {
         assertEquals(0, SQLHelper.getPaymentCount());
     }
 
-//    @Test
-//    @DisplayName("38.Поле CVC заполнено нулевым значением")
-//    public void shouldZeroTheCVCField() {
-//        mainPage.clickDebitCard();
-//        debitCardPage.debitCardData(DataHelper.getCVCFieldZero());
-//        debitCardPage.invalidFormatCVCField();
-//
-//        assertEquals(0, SQLHelper.getOrderCount());
-//        assertEquals(0, SQLHelper.getPaymentCount());
-//    }
+    @Test
+    @DisplayName("38.Поле CVC заполнено нулевым значением")
+    public void shouldZeroTheCVCField() {
+        mainPage.clickDebitCard();
+        debitCardPage.debitCardData(DataHelper.getCVCFieldZero());
+        debitCardPage.invalidFormatCVCField();
+
+        assertEquals(0, SQLHelper.getOrderCount());
+        assertEquals(0, SQLHelper.getPaymentCount());
+    }
 }
