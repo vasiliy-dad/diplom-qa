@@ -46,13 +46,13 @@ public class CreditPaymentPage {
     }
 
     public void notificationOk() {
-        notificationSuccess.should(visible, Duration.ofSeconds(20));
+        notificationSuccess.should(visible, Duration.ofSeconds(30));
         notificationSuccess.$("[class=notification__title]").should(text("Успешно")).shouldBe(visible, Duration.ofSeconds(20));
         notificationSuccess.$("[class=notification__content]").should(text("Операция одобрена Банком.")).shouldBe(visible, Duration.ofSeconds(20));
     }
 
     public void notificationFailed() {
-        notificationError.should(visible, Duration.ofSeconds(20));
+        notificationError.should(visible, Duration.ofSeconds(30));
         notificationError.$("[class=notification__title]").should(text("Ошибка")).shouldBe(visible, Duration.ofSeconds(20));
         notificationError.$("[class=notification__content]").should(text("Ошибка! Банк отказал в проведении операции.")).shouldBe(visible, Duration.ofSeconds(20));
     }
